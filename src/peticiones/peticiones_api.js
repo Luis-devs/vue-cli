@@ -1,4 +1,4 @@
-const URL = "http://localhost/api/api.php?accion=";
+const URL = "http://api-vue.freecluster.eu/api/api.php?accion=";
 class peticiones {
     async crear(data) {
         let response = await fetch(`${URL}INSERT`, {
