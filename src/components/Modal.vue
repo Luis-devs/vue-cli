@@ -4,7 +4,7 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel"><span v-if="opcs=='New'">Nuevo</span><span v-else>Actualizar</span> Usuario</h5>
+            <h5 class="modal-title" id="exampleModalLabel"><span v-if="opcs=='New'">Nuevo</span><span v-else>Actualizar</span> usuario</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
@@ -61,7 +61,6 @@
 
 <script>
 import peticiones_api from "@/peticiones/peticiones_api.js";
-//import HelloWorld from "@/components/HelloWorld.vue";
 export default {
 name:"Modal",
 
@@ -131,33 +130,6 @@ methods:{
                 input.classList.remove('invalid');
             });
     },
-    /*cerrarModal(e){
-        console.log("Cerra modal");
-        e.preventDefault();
-        var nombre_estilo = document.querySelectorAll('#nombre');
-         var email_estilo = document.querySelectorAll('#email');
-         var pass_estilo = document.querySelectorAll('#pass');
-         
-          Array.prototype.slice.call(nombre_estilo)
-            .forEach(function (input) {
-                input.classList.remove('invalid');
-                input.classList.remove('valid');
-            
-            });
-            
-          Array.prototype.slice.call(email_estilo)
-            .forEach(function (input) {
-                input.classList.remove('valid');
-                input.classList.remove('invalid');
-               
-            });
-            
-        Array.prototype.slice.call(pass_estilo)
-            .forEach(function (input) {
-                input.classList.remove('valid');
-                input.classList.remove('invalid');
-            });
-    },*/
     ValidarEmail(validar){
         // eslint-disable-next-line no-useless-escape
         let expreValidar= /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -216,32 +188,17 @@ methods:{
       
         e.preventDefault();
         this.errors = [];
-         // Fetch all the forms we want to apply custom Bootstrap validation styles to
-        /*var forms = document.querySelectorAll('.needs-validation');
-        // Loop over them and prevent submission
-        Array.prototype.slice.call(forms)
-            .forEach(function (form) {
-           
-                if (!form.checkValidity()) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                }
-                form.classList.add('was-validated')
-          
-            });*/
-        //let expreValidar = /^(([^<>()[\]\\.,;:\s@”]+(\.[^<>()[\]\\.,;:\s@”]+)*)|(“.+”))@((\[[0–9]{1,3}\.[0–9]{1,3}\.[0–9]{1,3}\.[0–9]{1,3}])|(([a-zA-Z\-0–9]+\.)+[a-zA-Z]{2,}))$/;
-  
         if (this.ValidarVacio(this.nombre) || this.nombre.length==0) {
             this.errors.push("El campo nombre no puede quedar vacio.");
-           this.Estilos("ponerNombre", 1);
-        } else if (this.nombre.length < 3) {
+         this.Estilos("ponerNombre", 1);
+            } else if (this.nombre.length < 3) {
             this.errors.push("El nombre debe tener mínimo 3 letras.");
             this.Estilos("ponerNombre", 1);
-        }
+             }
         else{
             this.errors.push(null);
             this.Estilos("ponerNombre", 0);
-        }
+            }
         if (this.ValidarVacio(this.email) || this.email.length==0) {
             this.errors.push("El campo email no puede quedar vacio.");
             this.Estilos("ponerEmail", 1);
@@ -273,8 +230,9 @@ methods:{
                     nombre: this.nombre,
                     correo:this.email,
                     pass:this.pass,
-                    }).then((response) => {
+                    }).then(response => {
                         if (response[0].status) {
+                            this.quitarEstilos();
                             this.id     = null;
                             this.nombre = "";
                             this.email  = "";
@@ -283,33 +241,62 @@ methods:{
                             this.$emit("consultar");
                             this.alert_success=true;
                             this.mensaje_alert="Usuario registrado correctamente.";
-                            setInterval(() => {
+                            setTimeout(() => {
                                 this.alert_success=false;
-                            }, 4000);
-                            this.quitarEstilos();
+                                document.getElementById("enviar").disabled=false;
+                                 
+                            }, 1900);
                             console.log(response);
                         } else {
                             this.alert_error=true;
                             this.mensaje_alert="No se pudo registrar el usuario, intenté nuevamente.";
-                            setInterval(() => {
+                            setTimeout(() => {
                                 this.alert_error=false;
-                            }, 4000);
+                                
+                            }, 1900);
+                            document.getElementById("enviar").disabled=false;
                             console.log(response[0].info);
                         }
                     });
            }
            else{
-               peticiones_api.actualizar()
+               peticiones_api.actualizar({
+                    id: this.id,
+                    nombre: this.nombre,
+                    correo:this.email,
+                    pass:this.pass,
+                    }).then(response=>{
+                        if(response[0].status){
+                            this.errors = [];
+                            this.$emit("consultar");
+                            this.alert_success=true;
+                            this.mensaje_alert="Usuario actualizado correctamente.";
+                            
+                            setTimeout(() => {
+                                this.alert_success=false;
+                                document.getElementById("enviar").disabled=false;
+                            this.quitarEstilos();
+                            }, 1900);
+                            console.log(response);
+                        }
+                        else{
+                             this.alert_error=true;
+                            this.mensaje_alert="No se pudo actualizar el usuario, intenté nuevamente.";
+                            setTimeout(() => {
+                                this.alert_error=false;
+                                document.getElementById("enviar").disabled=false;
+                            }, 1900);
+                            console.log(response[0].info);
+                        }
+                    });
            }
-           document.getElementById("enviar").disabled=false;
         }
-        
       
-    },
+    }
     },
 computed:{
     
-},
+}
 }
 </script>
 
@@ -325,6 +312,7 @@ computed:{
 }
 .valid{
     border: 1px solid #198754!important;
+    transition: all 0.5s ease-out;
 }
 .invalid{
     border: 1px solid #dc3545!important;
@@ -333,8 +321,8 @@ computed:{
     border-radius: 1.1rem!important;
 }
 .alert {
-    
     padding: 0.7rem 1rem!important;
     margin-bottom: 0!important;
+    transition: display 1s ease-in!important;
 }
 </style>
