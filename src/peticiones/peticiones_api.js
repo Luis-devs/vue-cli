@@ -1,7 +1,7 @@
 const URL = "https://vue-cli-api.000webhostapp.com/api/api.php?accion=";
 class peticiones {
     async crear(data) {
-        let response = await fetch(`${URL}INSERT`, {
+        let response = await fetch("https://vue-cli-api.000webhostapp.com/api/api.php?accion=INSERT", {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json;charset=utf-8'
