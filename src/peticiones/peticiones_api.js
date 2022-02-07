@@ -12,7 +12,11 @@ class peticiones {
     }
 
     async leer() {
-        let response = await fetch(`${URL}SELECT`);
+        let response = await fetch(`${URL}SELECT`, {
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8'
+            }
+        });
         return await response.json();
     }
 
