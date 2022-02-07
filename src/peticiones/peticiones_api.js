@@ -13,6 +13,7 @@ class peticiones {
 
     async leer() {
         let response = await fetch(`${URL}SELECT`, {
+            Accept: "application/json;q=0.9",
             headers: {
                 'Content-Type': 'application/json;charset=utf-8'
             }
